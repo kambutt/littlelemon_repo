@@ -55,7 +55,7 @@ ROOT_URLCONF = 'littlelemon.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,12 +120,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 # {% load_static %}:  Template tag to load static stuff from following URLs.
-
+# Static Folder must be inside the folder that is entered in INSTALLED_APPS in this case it is 'restaurant'
+# statis files therefore will be located under BASE_DIR\ + APP folder + STATIC_URL folder 
+# C:\Userdata\Meta\Projects\littlelemon\littlelemon\restaurant\static.
+# If static files are within a subdirectory of static folder, then that subfolder must be specified in html templates src.
+# So, if the files are in a subfolder called img or restuaurant
+#  {% load static %}
+#   <img src="{% static 'restaurant/logo.png' %}">
 STATIC_URL = 'static/'
-
-STATICFILES_DIR = [
-    'static/',
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
