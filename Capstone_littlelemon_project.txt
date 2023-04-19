@@ -1,0 +1,4 @@
+python manage.py createsuperuser
+Username:  djangoadmin
+email: dadmin@llemon.com
+password:  djangoadmin
