@@ -2,3 +2,85 @@ python manage.py createsuperuser
 Username:  djangoadmin
 email: dadmin@llemon.com
 password:  djangoadmin
+
+To see SQL generated 
+>python manage.py sqlmigrate restaurant 0001_initial
+
+To see and do CRUD operation on model tables using admin website modify admin.py
+from .models import Booking, Menu
+
+# Register your models here.
+admin.site.register(Booking)
+admin.site.register(Menu)
+
+Build API
+Step 1:  Install djangorestframework
+>pip install djangorestframework
+Step 2:  Modify settings.py file, add under INSTALLED_APPS
+'rest_framework',
+Step 3:  Create model definition in models.py and migrate them.
+Step 4:  Serialize the models to take the data and convert it into JSON by using serialization.
+    a:  creating serializers.py file.  
+    b:  Import serializers class from rest_framework
+        from rest_framework import serializers
+    c:  Import models for serialization from models.py
+        from .models import Menu
+    d:  Instantiate the serializers.ModelSerializer class and provide the model and model fields for serialization.
+        class MenuSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Menu
+                fields = '__all__'
+Step 5:  Create views in views.py file using rest_framework's APIviews
+    #For APIs
+    from .models import Menu, Booking
+    from .serializers import MenuSerializer, BookingSerializer
+    from rest_framework.views import APIView
+    from rest_framework.response import Response
+    class MenuView(APIView): Instantiating the APIview class
+    def get(self,request):  Defining function to respond to a GET request
+        items = Menu.objects.all() Bringing in data from database using model
+        serializer = MenuSerializer(items, many = True) converting the data into JSON using serializer
+        return Response(serializer.data) returning the JSON data.
+Step 6:  Make path entries in urls.py app level for the api views thus created.
+    path('menu',views.MenuView.as_view()),
+Step 7:  Make path entry in urls.py project level for the app api views.
+    path('api/',include('restaurant.urls')),
+Step 8: Install django rest_framework.
+>pip instal djangorestframework
+Step 9:  Create views in views.py.  
+    a)  Use Viewsets
+        All of the following views require a serializer and/or a queryset.
+        1)  Use APIView class
+            from rest_framework.views import APIview
+        2)  Use 'viewsets', an extended class of APIView
+            from rest_framework import viewsets
+            a) Use Viewset class of viewsets
+            b) Use ModelViewSet class of viewsets.  This has built in CRUD operations on the model.
+        When using option 1) above, the view is defined as
+        class MenuView(APIView):
+        The GET, POST, PUT, PATCH, DELETE are to be programmed as function inside the class.
+        def get(self,request):, def post (self, request): etc.
+        When using option 2) above, the view is defined as
+        class MenuViewset(viewsets.ViewSet):, class MenuModelViewset(viewsets.ModelViewSet):
+        The GET, POST, PUT, PATCH, DELETE are programmed as list(), create(), update(), partial_update(), destroy().
+        Other then GET, list(), POST, create(), the rest of the methods use pk in addition to (self,request)
+    b)  Use Generic views
+
+Step 10:  URL routing:  If views are done using Step 9.  In urls.py
+    from rest_framework.routers import DefaultRouter
+    Create router
+    router = DefaultRouter()
+    Register views based on viewsets with router
+    router.register(r'menus',views.MenuViewset,basename='menu')
+    router.register(r'menuss',views.MenuModelViewset,basename='menus')
+            
+Step 11:  Setup Authentication
+    from rest_framework.permissions import isAuthenticated
+    Use permissions inside class or individually inside methods to implement authentication
+    Permission_classes = [IsAuthenticated]
+    Permissions can be set globally in settings.py file.
+    REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
