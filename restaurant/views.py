@@ -133,8 +133,9 @@ class BookingModelViewset(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     #Require a serializer to convert the queryset into JSON
     serializer_class = BookingSerializer
-        
-    #list instead of get
+    #Queryset and serializer class provides basic CRUD operational capability on its own.
+    #Definining further functions is for customization.    
+    """
     def list(self, request):
         #Require a queryset
         queryset = self.queryset        
@@ -150,6 +151,7 @@ class BookingModelViewset(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': 'Data Created'}, status=status.HTTP_201_CREATED)
+    """
 #--------------------------------------------------------------------------------------------------
 #API Views using Generic views        
 
@@ -198,3 +200,22 @@ class BookingGenericView(generics.ListCreateAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': 'Data Created'}, status=status.HTTP_201_CREATED)
+#------------------------------------------------------------------------------------------------------------
+class MenuItemView(generics.ListCreateAPIView):
+    queryset = Menu.objects.all()
+    serializer_class = MenuSerializer
+    
+    def list(self, request):
+        serializer = self.serializer_class(self.get_queryset(), many=True)
+        return Response(serializer.data)
+    
+    def create(self, request):
+        serializer = self.serializer_class(data = request.data)        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status':'Data Created'},status=status.HTTP_201_CREATED)
+
+class SingleMenuItemView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
+    serializer_class = MenuSerializer
+    queryset = Menu.objects.all()
+    

@@ -13,11 +13,25 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+--------------------
+Viewset, Modelviewset based views are registered here not at app level but can be done.
+#Register views based on viewsets with router
+#router.register(r'menuv',views.MenuViewset,basename='menuv')
+#router.register(r'bookingv',views.BookingViewset,basename='bookingv')
+#Register views based on Modelviewsets with router
+#router.register(r'menum',views.MenuModelViewset,basename='menum')
 """
 from django.contrib import admin
 from django.urls import path, include
+from restaurant import views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'tables',views.BookingModelViewset,basename='table')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/',include('restaurant.urls')),    
+    path('restaurant/',include('restaurant.urls')),    
+    path('restaurant/booking/',include(router.urls)),
 ]

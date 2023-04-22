@@ -65,6 +65,11 @@ Step 9:  Create views in views.py.
         The GET, POST, PUT, PATCH, DELETE are programmed as list(), create(), update(), partial_update(), destroy().
         Other then GET, list(), POST, create(), the rest of the methods use pk in addition to (self,request)
     b)  Use Generic views
+        generics.ListCreateAPIView etc.
+    c)  Use functioni based views.  In which case the APIview and  Permission class stuff is used as a decorator
+        @api_view(['GET'])
+        @permission_classes([IsAuthenticated])
+        def example_view(request, format=None):
 
 Step 10:  URL routing:  If views are done using Step 9.  In urls.py
     from rest_framework.routers import DefaultRouter
