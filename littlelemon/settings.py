@@ -39,6 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'restaurant',
     'rest_framework',
+    #For Token based authentication implementation.  Also see REST_FRAMEWORK settings below.
+    'rest_framework.authtoken',
+    #For User management without using djangoadmin.  Djoser provides different API end points.  Djoser entry must be after rest_framework entry
+    #See further djoser related settings below.
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +142,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        ]    
+}
+#Following requires both Session and Token Authentication entries above.  Also see project urls.py.
+DJOSER = {"USER_ID_FIELD":"username"}

@@ -15,6 +15,7 @@ from rest_framework import status
 from rest_framework import generics
 
 #For authentication
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 #API views for models based on their serializers
@@ -204,7 +205,7 @@ class BookingGenericView(generics.ListCreateAPIView):
 class MenuItemView(generics.ListCreateAPIView):
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
-    
+    permission_classes = [IsAuthenticated]
     def list(self, request):
         serializer = self.serializer_class(self.get_queryset(), many=True)
         return Response(serializer.data)
@@ -218,4 +219,11 @@ class MenuItemView(generics.ListCreateAPIView):
 class SingleMenuItemView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
     serializer_class = MenuSerializer
     queryset = Menu.objects.all()
-    
+#----------------------------------------------------------------------------------------------------------------
+#Implementation of Token authentication using Function based views
+#This decorator turns the function based view into an API view
+@api_view()
+#This decorated implements the Token authentication registered in settings.py file.
+@permission_classes([IsAuthenticated])
+def msg(request):
+    return Response({"message":"This view is protected"})

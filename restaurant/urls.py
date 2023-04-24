@@ -13,4 +13,5 @@ urlpatterns = [
     #path('bookingg',views.BookingGenericView.as_view()),
     path('menu/',views.MenuItemView.as_view()),
     path('menu/<int:pk>',views.SingleMenuItemView.as_view()),
+    path('message',views.msg),
 ]

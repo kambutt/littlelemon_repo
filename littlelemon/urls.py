@@ -25,13 +25,17 @@ from django.contrib import admin
 from django.urls import path, include
 from restaurant import views
 from rest_framework.routers import DefaultRouter
-
 router = DefaultRouter()
 router.register(r'tables',views.BookingModelViewset,basename='table')
-
+#Token authentication.  To get a token generating API endpoint.  Have to use Insomnia to send a POST request with username and password to get token.
+from rest_framework.authtoken import views
+#djoser based Authentication.  This end point does not need Insomnia.  It provides API endpoint to get token using username and password and more.
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('restaurant/',include('restaurant.urls')),    
-    path('restaurant/booking/',include(router.urls)),
+    path('restaurant/booking/',include(router.urls)),    
+    path('restaurant/api-token-auth/', views.obtain_auth_token),
+    path('auth/',include('djoser.urls')),
+    path('auth/',include('djoser.urls.authtoken')),
 ]
