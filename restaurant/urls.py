@@ -6,11 +6,6 @@ from . import views
 #For class based, APIViews and Generic views urls are defined here
 
 urlpatterns = [    
-    #path('menu',views.MenuView.as_view()),
-    #path('booking',views.BookingView.as_view()),
-    #paths for Generic views
-    #path('menug',views.MenuGenericView.as_view()),
-    #path('bookingg',views.BookingGenericView.as_view()),
     path('menu/',views.MenuItemView.as_view(), name="menu"),
     path('menu/<int:pk>',views.SingleMenuItemView.as_view()),
     path('message',views.msg),
