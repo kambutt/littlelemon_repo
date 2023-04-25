@@ -89,3 +89,64 @@ Step 11:  Setup Authentication
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+-----------------------------------------------------------------------------------------------------------------------------------
+Unit Testing
+------------
+Model
+-----
+Step 1:  Create test_nnnnn.py files for testing.  For eg.  test_models.py, test_views.py
+Step 2:  Import necessary library.
+            from django.test import TestCase
+Step 3:  Create an instance of the testcases.TestCase class for the model or view subjected to test.  For e.g.
+            class MenuTest(TestCase):
+Step 4:  Write a function inside with code to do something, for e.g. create a record.
+                def test_get_item(self):
+                    item = Menu.objects.create(title="Ice Cream", price=20, inventory = 200)
+Step 5:  Test the output against the values.  i.e. if the record was created using the values specifed.
+                    self.assertEqual(str(item),"Ice Cream","20")
+----
+View
+----
+Step 1: Same as above
+Step 2: Import model used in API view
+            from .models import Menu
+Step 3: Import following to handle calling the views referred in urls.py file
+            from django.urls import reverse
+            from rest_framework.test import APIClient
+Step 4: Create a test_views.py file and create a function to create a list (a payload)
+            def create_menutestitem(title, price, inventory):
+                testmenuitem = []
+                newitem = Menu.objects.create(title=title, price=price, inventory =inventory)
+                testmenuitem.append(newitem)
+                return testmenuitem
+Step 5: Create a test function by using TestCase class
+            class MenuItemViewTest(TestCase):
+Step 6: Create an instance of APIClient to invoke the view used in urls.py.  For this create setUp(self) function.  spelling is important.
+            def setUp(self):
+                self.client =APIClient()
+Step 7: Create a model record using the function from Step 4.
+                self.testmenuitems = create_menutestitem("Ice Cream", 5.99, 30)
+Step 8: Now call the APIView and see if the query provides the same record as created.
+        def test_getall(self):
+            #For this path entry for APIView should have a name="menu" entry.  Find the url using name.
+            url = reverse("menu")
+            #Issue view call using url
+            response = self.client.get(url)
+            #Check if call is successful
+            self.assertEqual(response.status_code, 200)
+            #put the data lists into local variables.
+            added_menuitem = self.testmenuitems
+            expected_menuitem = response.data
+            #Check if the number of records created equals number of records retrieved.
+            self.assertEqual(len(added_menuitem), len(expected_menuitem))
+            #Loop through number of records
+            for i in range (len(expected_menuitem)):
+                #grab each record from both 
+                #created and 
+                menuadd = added_menuitem[i]
+                #received data
+                menuexp = expected_menuitem[i]
+                #Match the two
+                self.assertEqual(menuadd.title, menuexp['title'])
+                self.assertEqual(str(menuadd.price), menuexp['price'])

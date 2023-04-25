@@ -205,7 +205,7 @@ class BookingGenericView(generics.ListCreateAPIView):
 class MenuItemView(generics.ListCreateAPIView):
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     def list(self, request):
         serializer = self.serializer_class(self.get_queryset(), many=True)
         return Response(serializer.data)
