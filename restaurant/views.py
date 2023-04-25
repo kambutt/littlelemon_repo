@@ -1,10 +1,6 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-
 #For APIs
 from .models import Menu, Booking
 from .serializers import MenuSerializer, BookingSerializer
-from rest_framework.views import APIView
 from rest_framework.response import Response
 
 #For APIs using viewsets
